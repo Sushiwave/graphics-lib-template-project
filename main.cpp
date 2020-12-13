@@ -17,6 +17,7 @@
 
 
 
+
 int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 {
 #if defined(DEBUG) || defined(_DEBUG)
@@ -26,7 +27,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 
 
 	// Initialize GraphicsLib
-	const auto& screenUpdater = cg::System::initialize(1500, 800, false, 16, "Sample");
+	const auto& screenUpdater = cg::System::initialize(1500, 800, false, 1, "Sample");
 	ImGui_ImplGraphicsLib_Init();
 
 
@@ -47,78 +48,62 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 	std::string renderingGroupName;
 	try
 	{
-		//renderPipeline = std::make_shared<DefferedSampleRenderPipeline>(mainRenderTarget);
-		//renderingGroupName = DefferedSampleRenderPipeline::targetRenderingGroupName;
+		renderPipeline = std::make_shared<DefferedSampleRenderPipeline>(mainRenderTarget);
+		renderingGroupName = DefferedSampleRenderPipeline::targetRenderingGroupName;
 
-		renderPipeline = std::make_shared<ForwardSampleRenderPipeline>(mainRenderTarget);
-		renderingGroupName = ForwardSampleRenderPipeline::targetRenderingGroupName;
+		//renderPipeline = std::make_shared<ForwardSampleRenderPipeline>(mainRenderTarget);
+		//renderingGroupName = ForwardSampleRenderPipeline::targetRenderingGroupName;
 
 		//renderPipeline = std::make_shared<ForwardZPrePassSampleRenderPipeline>(mainRenderTarget);
 		//renderingGroupName = ForwardZPrePassSampleRenderPipeline::targetRenderingGroupName;
 	}
 	catch (cpp::com_runtime_error e)
 	{
-		LogEX(e.message());
+		Log(e.message());
 	}
-
-
 
 	// Prepare material
 	auto materialConstant = std::make_shared<SimplePBRMaterialConstant>();
 	materialConstant->changeIOR(1.35f);
 	materialConstant->changeMetalness(0.8f);
 	materialConstant->changeRoughness(0.6f);
-	materialConstant->changeColor(1.0, 0.5, 0.2);
 
 	auto materialConstantDict = cg::Material::ConstantDict();
 	materialConstantDict.emplace(cg::ShaderStage::ps, materialConstant);
 	auto material = cg::Material(materialConstantDict);
 
 	auto planeMaterial = material.clone();
-	auto lucyMaterial = material.clone();
-	auto buddhaMaterial = material.clone();
-	auto bunnyMaterial = material.clone();
+	auto sphereMaterial = material.clone();
+	auto boxMaterial = material.clone();
 
-	std::dynamic_pointer_cast<SimplePBRMaterialConstant>(planeMaterial.getConstantP(cg::ShaderStage::ps))->changeColor(1.0, 1.0, 1.0);
+	std::dynamic_pointer_cast<SimplePBRMaterialConstant>(planeMaterial.getConstantP(cg::ShaderStage::ps))->changeColor(1.0f, 1.0f, 1.0f);
+	std::dynamic_pointer_cast<SimplePBRMaterialConstant>(sphereMaterial.getConstantP(cg::ShaderStage::ps))->changeColor(0.9f, 0.05f, 0.5f);
+	std::dynamic_pointer_cast<SimplePBRMaterialConstant>(boxMaterial.getConstantP(cg::ShaderStage::ps))->changeColor(0.3f, 0.3f, 0.8f);
+
 
 
 	// Prepare objects
 	auto plane = DrawableObjectCreator::createBox<vsinput::Position3Normal3>("Plane", 5.0f, 0.1f, 5.0f, planeMaterial);
-	auto lucy = DrawableObjectCreator::createWavefronOBJModel<vsinput::Position3Normal3>("Lucy", "Assets/Resources/3DModel/WavefrontOBJ/Alucy.obj", lucyMaterial);
-	auto buddha = DrawableObjectCreator::createWavefronOBJModel<vsinput::Position3Normal3>("Buddha", "Assets/Resources/3DModel/WavefrontOBJ/happy-buddha.obj", buddhaMaterial);
-	auto bunny = DrawableObjectCreator::createWavefronOBJModel<vsinput::Position3Normal3>("Bunny", "Assets/Resources/3DModel/WavefrontOBJ/bunny.obj", bunnyMaterial);
+	auto sphere = DrawableObjectCreator::createSphere<vsinput::Position3Normal3>("Sphere", 0.75f * 0.5f, 20, 20, sphereMaterial);
+	auto box = DrawableObjectCreator::createBox<vsinput::Position3Normal3>("Box", 0.75f, 0.75f, 0.75f, boxMaterial);
 
-	auto& planeTransform = plane->getTransformRef();
-	auto& lucyTransform = lucy->getTransformRef();
-	auto& buddhaTransform = buddha->getTransformRef();
-	auto& bunnyTransform = bunny->getTransformRef();
-
-	bunnyTransform.changeScale(0.75, 0.75, 0.75);
-
-	planeTransform.changePosition(0.0f, -0.05f, 0.0f);
-	lucyTransform.changePosition(0.0f, 0.5f, 0.0f);
-	buddhaTransform.changePosition(-1.0f, 0.5f, 0.0f);
-	bunnyTransform.changePosition(1.0, 0.375f, 0.0f);
-
-	lucyTransform.changeEulerRotationAngleY(2.3);
-	buddhaTransform.changeEulerRotationAngleY(-0.8);
-	bunnyTransform.changeEulerRotationAngleY(3.1);
-
+	plane->getTransformRef().changePosition(0.0f, -0.05f, 0.0f);
+	sphere->getTransformRef().changePosition(0.75f, 0.75f * 0.5f, 0.0f);
+	box->getTransformRef().changePosition(-0.75f, 0.75f * 0.5f, 0.0f);
 
 	plane->moveTo(renderingGroupName);
-	lucy->moveTo(renderingGroupName);
-	buddha->moveTo(renderingGroupName);
-	bunny->moveTo(renderingGroupName);
+	sphere->moveTo(renderingGroupName);
+	box->moveTo(renderingGroupName);
+
 
 
 	// Setup Scene
 	auto scene = cg::Scene("World");
 
 	auto mainGroup = std::make_shared<cg::DrawableObjectGroup>("MainGroup");
+	mainGroup->add(sphere);
+	mainGroup->add(box);
 	mainGroup->add(plane);
-	mainGroup->add(lucy);
-	mainGroup->add(buddha);
-	mainGroup->add(bunny);
 
 	scene.addObjectGroup(mainGroup);
 
