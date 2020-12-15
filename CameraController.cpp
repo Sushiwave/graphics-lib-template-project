@@ -9,7 +9,7 @@ void CameraController::control(cg::Camera& target)
 {
     if (m_isEnabled)
     {
-        auto& transform = target.getTransformRef();
+        auto& transform = *target.transform;
         switch (m_method)
         {
         case ObjectControllingMethod::freeLookWASD:

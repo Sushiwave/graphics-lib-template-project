@@ -22,7 +22,7 @@ namespace ImGui
 		}
 		if (ImGui::TreeNode("Transform"))
 		{
-			ImGui::TransformInspector(object.getTransformRef());
+			ImGui::TransformInspector(*object.transform);
 			ImGui::TreePop();
 		}
 		if (ImGui::TreeNode("Material"))

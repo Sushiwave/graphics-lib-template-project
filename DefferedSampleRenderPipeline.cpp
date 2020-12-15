@@ -76,14 +76,14 @@ DefferedSampleRenderPipeline::DefferedSampleRenderPipeline(const std::shared_ptr
 									  auto pointLightSrc = std::dynamic_pointer_cast<SimplePointLight>(scene.getLights(SimplePointLight::type).at("Back"));
 									  auto& pointLightDest = data.pointLights[0];
 									  pointLightDest = pointLightSrc->getConstant().get<constant::SimplePointLight>();
-									  cpp::assignVector3DToArray4(&pointLightDest.position, pointLightSrc->getTransformRef().calcPositionWorld());
+									  cpp::assignVector3DToArray4(&pointLightDest.position, pointLightSrc->transform->calcPositionWorld());
 
 									  auto directionalLightSrc = std::dynamic_pointer_cast<SimpleDirectionalLight>(scene.getLights(SimpleDirectionalLight::type).at("Key"));
 									  auto& directionalLightDest = data.directionalLight;
 									  directionalLightDest = directionalLightSrc->getConstant().get<constant::SimpleDirectionalLight>();
-									  cpp::assignVector3DToArray4(&directionalLightDest.direction, directionalLightSrc->perspective.getTransformRef().calcForwardWorld());
+									  cpp::assignVector3DToArray4(&directionalLightDest.direction, directionalLightSrc->perspective.transform->calcForwardWorld());
 
-									  cpp::assignVector3DToArray4(&data.cameraPosition, scene.camera.getTransformRef().calcPositionLocal());
+									  cpp::assignVector3DToArray4(&data.cameraPosition, scene.camera.transform->calcPositionLocal());
 								  }
 							  )
 						  )

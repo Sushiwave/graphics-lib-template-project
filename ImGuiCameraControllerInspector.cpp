@@ -48,7 +48,7 @@ namespace ImGui
 
 
 
-		auto& transform = camera.getTransformRef();
+		auto& transform = *camera.transform;
 		if (previewItem == itemLookAt)
 		{
 			cameraController.changeControllingMethod(ObjectControllingMethod::lookAt);

@@ -34,7 +34,7 @@ namespace ImGui
 				{
 					if (ImGui::TreeNode("Transform"))
 					{
-						ImGui::TransformInspector(directionalLight->perspective.getTransformRef());
+						ImGui::TransformInspector(*directionalLight->perspective.transform);
 
 						ImGui::TreePop();
 					}
@@ -53,7 +53,7 @@ namespace ImGui
 			{
 				if (ImGui::TreeNode("Transform"))
 				{
-					ImGui::TransformInspector(spotLight->getTransformRef());
+					ImGui::TransformInspector(*spotLight->transform);
 
 					ImGui::TreePop();
 				}
@@ -69,7 +69,7 @@ namespace ImGui
 			{
 				if (ImGui::TreeNode("Transform"))
 				{
-					ImGui::TransformInspector(pointLight->getTransformRef());
+					ImGui::TransformInspector(*pointLight->transform);
 
 					ImGui::TreePop();
 				}

@@ -32,10 +32,7 @@ namespace ImGui
 		{
 			auto object = pair.second;
 			objectList.emplace_back(object);
-			if (const auto safeObject = object.lock())
-			{
-				objectNameList.emplace_back(safeObject->getName());
-			}
+			objectNameList.emplace_back(object->getName());
 		}
 
 		int selectedObjectIndex = -1;
@@ -50,7 +47,7 @@ namespace ImGui
 		if (auto object = objectList[selectedObjectIndex].lock())
 		{
 			m_drawableObjectInspector.draw(*object);
-			ImGui::CameraJumpButton(cameraController, scene.camera, object->getTransformRef());
+			ImGui::CameraJumpButton(cameraController, scene.camera, *object->transform);
 		}
 	}
 	void SceneDrawableObjectInspector::reset()
