@@ -9,11 +9,17 @@
 
 
 
+
 class DrawableObjectCreator
 {
 private:
 	DEFINE_SFINAE_HAS_MEMBER(normal);
 	DEFINE_SFINAE_HAS_MEMBER(uv);
+private:
+	static inline constexpr bool m_leftHanded
+#ifdef CONTEXT_D3D11
+		= true;
+#endif
 private:
 	template <typename Vertex_>
 	static void assignPositionInfoTo(std::vector<Vertex_>& vertices, const cg::GeometryCalculator::PositionList& vertexPositionList)
@@ -109,19 +115,13 @@ private:
 		object->primitiveTopology = cg::PrimitiveTopology::TRIANGLELIST;
 		return object;
 	}
-public:
 	template <typename Vertex_>
-	static std::shared_ptr<cg::DrawableObject> createWavefronOBJModel(const std::string& name, const std::string& filename, cg::Material material = cg::Material())
+	static std::shared_ptr<cg::DrawableObject> createWavefrontOBJModel(const std::string& name, std::shared_ptr<cg::WavefrontOBJModel> model, cg::Material material = cg::Material())
 	{
-		bool leftHanded = false;
-#ifdef CONTEXT_D3D11
-		leftHanded = true;
-#endif
-		const auto model = cg::WavefrontOBJModelLoader::load(filename, leftHanded);
 		cg::DrawableObject::Parts parts;
-		
-		auto offset = -model->minXYZ-model->size*0.5;
-		
+
+		auto offset = -model->minXYZ - model->size * 0.5;
+
 		const auto groupCount = static_cast<unsigned int>(model->groupList.size());
 		for (unsigned int i = 0; i < groupCount; ++i)
 		{
@@ -129,14 +129,14 @@ public:
 
 			std::vector<Vertex_> vertices;
 			group.copyVertexDataTo(&vertices, offset);
-			const auto vertexBuffer   = cg::API::shared.graphics()->createVertexBuffer(&vertices[0], group.vertexCount, group.vertexByteSize);
-			const auto indexBuffer    = cg::API::shared.graphics()->createIndexBuffer(group.indices);
+			const auto vertexBuffer = cg::API::shared.graphics()->createVertexBuffer(&vertices[0], group.vertexCount, group.vertexByteSize);
+			const auto indexBuffer = cg::API::shared.graphics()->createIndexBuffer(group.indices);
 			const auto geometryBuffer = cg::API::shared.graphics()->createGeometryBuffer(vertexBuffer, indexBuffer);
 
 			std::string groupName = group.name;
 			if (groupName.empty())
 			{
-				groupName = "part"+std::to_string(i+1);
+				groupName = "part" + std::to_string(i + 1);
 			}
 
 			parts.emplace(groupName, cg::DrawableObject::Part(groupName, material, geometryBuffer));
@@ -144,6 +144,25 @@ public:
 		auto object = std::make_shared<cg::DrawableObject>(name, std::make_shared<cg::AnyModel>(model->size), parts);
 		object->primitiveTopology = cg::PrimitiveTopology::TRIANGLELIST;
 		return object;
+	}
+public:
+	template <typename Vertex_>
+	static void createWavefronOBJModelAsync(const std::string& name, const std::string& filename, cg::Material material, const std::function<void(std::shared_ptr<cg::DrawableObject>)>& processingAfterCreating)
+	{
+		cg::WavefrontOBJModelLoader::loadAsync
+		(
+			filename, 
+			[=](std::shared_ptr<cg::WavefrontOBJModel> model)
+			{
+				processingAfterCreating(createWavefrontOBJModel<Vertex_>(name, model, material));
+			}, 
+			m_leftHanded
+		);
+	}
+	template <typename Vertex_>
+	static std::shared_ptr<cg::DrawableObject> createWavefrontOBJModel(const std::string& name, const std::string& filename, cg::Material material = cg::Material())
+	{
+		return createWavefrontOBJModel<Vertex_>(name, cg::WavefrontOBJModelLoader::load(filename, m_leftHanded), material);
 	}
 	template <typename Vertex_>
 	static std::shared_ptr<cg::DrawableObject> createPlane(const std::string& name, float width, float height, cg::Material material = cg::Material())
