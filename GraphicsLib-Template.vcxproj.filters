@@ -152,7 +152,7 @@
       <Filter>HeaderFiles\RenderPipeline\Sample\Deffered\GeometryRenderPipeline</Filter>
     </ClInclude>
     <ClInclude Include="SampleGBuffer.hpp">
-      <Filter>SourceFiles\RenderPipeline\Sample\Deffered\GBuffer\SampleGBuffer</Filter>
+      <Filter>HeaderFiles\RenderPipeline\Sample\Deffered\GBuffer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -369,9 +369,6 @@
     <Filter Include="SourceFiles\RenderPipeline\Sample\Forward">
       <UniqueIdentifier>{ed68bfb3-ca66-4382-ba54-53d04d5b2ed0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="SourceFiles\RenderPipeline\Sample\Forward\SampleShadingRenderPipeline">
-      <UniqueIdentifier>{0710561d-058a-4673-b1fc-6d8422ee3294}</UniqueIdentifier>
-    </Filter>
     <Filter Include="SourceFiles\RenderPipeline\Sample\Deffered">
       <UniqueIdentifier>{d083befb-6503-4231-8181-40c5a4cbc650}</UniqueIdentifier>
     </Filter>
@@ -429,17 +426,20 @@
     <Filter Include="HeaderFiles\RenderPipeline\Base\DefferedRenderPipeline\GeometryRenderPipeline">
       <UniqueIdentifier>{72932901-cd3f-4658-86d7-5066dc6c02c8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="SourceFiles\RenderPipeline\Sample\Deffered\SampleGeometryRenderPipeline">
-      <UniqueIdentifier>{2e2ab760-9c7d-48b6-8108-16ce4fd9399a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="HeaderFiles\RenderPipeline\Sample\Deffered\GeometryRenderPipeline">
       <UniqueIdentifier>{9bb84450-ef1e-463a-bc84-c5de5832437b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="SourceFiles\RenderPipeline\Sample\Deffered\GBuffer">
+    <Filter Include="HeaderFiles\RenderPipeline\Sample\Deffered\GBuffer">
       <UniqueIdentifier>{b05f9eaa-a187-42d0-9067-6b1b38f00f34}</UniqueIdentifier>
     </Filter>
-    <Filter Include="SourceFiles\RenderPipeline\Sample\Deffered\GBuffer\SampleGBuffer">
-      <UniqueIdentifier>{0f6db4f9-57dd-4904-924d-29ae8089afb3}</UniqueIdentifier>
+    <Filter Include="SourceFiles\RenderPipeline\Sample\Deffered\GBuffer">
+      <UniqueIdentifier>{eafab419-a82b-4990-9a20-8ce4c38ea3c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SourceFiles\RenderPipeline\Sample\Deffered\GeometryRenderPipeline">
+      <UniqueIdentifier>{2e2ab760-9c7d-48b6-8108-16ce4fd9399a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SourceFiles\RenderPipeline\Sample\Forward\ShadingRenderPipeline">
+      <UniqueIdentifier>{0710561d-058a-4673-b1fc-6d8422ee3294}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -534,7 +534,7 @@
       <Filter>SourceFiles\ImGui\Components\GraphicsLibDefaultInspector</Filter>
     </ClCompile>
     <ClCompile Include="SampleShadingRenderPipeline.cpp">
-      <Filter>SourceFiles\RenderPipeline\Sample\Forward\SampleShadingRenderPipeline</Filter>
+      <Filter>SourceFiles\RenderPipeline\Sample\Forward\ShadingRenderPipeline</Filter>
     </ClCompile>
     <ClCompile Include="SimpleDirectionalLight.cpp">
       <Filter>SourceFiles\Light\DirectionalLight</Filter>
@@ -573,9 +573,11 @@
       <Filter>SourceFiles\RenderPipeline\Base\DefferedRenderPipeline</Filter>
     </ClCompile>
     <ClCompile Include="SampleGeometryRenderPipeline.cpp">
-      <Filter>SourceFiles\RenderPipeline\Sample\Deffered\SampleGeometryRenderPipeline</Filter>
+      <Filter>SourceFiles\RenderPipeline\Sample\Deffered\GeometryRenderPipeline</Filter>
     </ClCompile>
-    <ClCompile Include="SampleGBuffer.cpp" />
+    <ClCompile Include="SampleGBuffer.cpp">
+      <Filter>SourceFiles\RenderPipeline\Sample\Deffered\GBuffer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ShaderConstant.hlsl">
