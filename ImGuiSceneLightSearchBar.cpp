@@ -11,7 +11,7 @@ namespace ImGui
 {
 	void SceneLightInspector::draw(const cg::Scene& scene)
 	{
-		auto lightDict = scene.getLightDict();
+		auto lightDict = scene.makeLightDict();
 		std::vector<std::shared_ptr<cg::Light>> lightList;
 		std::vector<std::string> lightNameList;
 		for (auto pair : lightDict)

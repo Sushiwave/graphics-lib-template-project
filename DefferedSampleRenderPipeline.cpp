@@ -51,7 +51,7 @@ DefferedSampleRenderPipeline::DefferedSampleRenderPipeline(const std::shared_ptr
 									  cg::TransformConstantBufferHelper::storeInvV(&data.invV, c);
 									  cg::TransformConstantBufferHelper::storeInvP(&data.invP, c);
 									
-									  const auto keyLight = std::dynamic_pointer_cast<SimpleDirectionalLight>(s.getLightDict().at("Key"));
+									  const auto keyLight = std::dynamic_pointer_cast<SimpleDirectionalLight>(s.makeLightDict().at("Key"));
 									  cg::TransformConstantBufferHelper::storeVP(&data.lvp, keyLight->perspective);
 								  }
 							  )

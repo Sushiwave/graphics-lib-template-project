@@ -12,7 +12,7 @@ namespace ImGui
 {
 	void SceneDrawableObjectInspector::draw(cg::Scene& scene, CameraController& cameraController)
 	{
-		const auto groupNameList = scene.createManagedGroupNameList();
+		const auto groupNameList = scene.makeGroupNameList();
 		
 		int selectedGroupIndex = -1;
 		m_groupSearchBar.draw("Group", "Name...", groupNameList, 8, selectedGroupIndex);
@@ -27,7 +27,7 @@ namespace ImGui
 		std::vector<std::weak_ptr<cg::DrawableObject>> objectList;
 
 		const auto groupName = groupNameList.at(selectedGroupIndex);
-		const auto objects = scene.getObjectDict(groupName);
+		const auto objects = scene.getGroup(groupName)->makeObjectDict();
 		for (const auto pair : objects)
 		{
 			auto object = pair.second;
