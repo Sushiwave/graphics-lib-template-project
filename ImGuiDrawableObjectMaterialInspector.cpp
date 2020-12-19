@@ -11,12 +11,7 @@ namespace ImGui
 {
 	void DrawableObjectMaterialInspector::draw(const cg::DrawableObject& object)
 	{
-		std::vector<std::string> partNameList;
-		for (auto pair : object.parts)
-		{
-			auto part = pair.second;
-			partNameList.emplace_back(part.getName());
-		}
+		std::vector<std::string> partNameList = object.geometry.parts.makePartNameList();
 
 		int selectedPartIndex = -1;
 		m_searchBar.draw("Part", "Name...", partNameList, 8, selectedPartIndex);
@@ -28,7 +23,7 @@ namespace ImGui
 		}
 
 		const auto partName = partNameList[selectedPartIndex];
-		const auto part = object.parts.at(partName);
+		const auto part = object.geometry.parts.get(partName);
 
 		using ShaderStageNameWithIndex = std::pair<const char*, int>;
 		std::vector<std::shared_ptr<IImGuiComponentsHolder>> imGuiComponentsList;

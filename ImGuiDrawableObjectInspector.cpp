@@ -10,7 +10,7 @@ namespace ImGui
 {
 	void DrawableObjectInspector::draw(cg::DrawableObject& object)
 	{
-		auto components = object.getShapeP<IImGuiComponentsHolder>();
+		auto components = object.geometry.getShapeP<IImGuiComponentsHolder>();
 		if (components)
 		{
 			if (ImGui::TreeNode("Shape"))

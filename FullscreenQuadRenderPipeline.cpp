@@ -34,7 +34,7 @@ FullscreenQuadRenderPipeline::FullscreenQuadRenderPipeline(const std::string& na
 	  (
 		  [=]()
 		  {
-			  quad->parts.at("main").getGeometryBuffer()->draw(quad->primitiveTopology, quad->instanceCount);
+			  quad->geometry.parts.get("main").getGeometryBuffer()->draw(quad->primitiveTopology, quad->instanceCount);
 		  }
 	  )
 {

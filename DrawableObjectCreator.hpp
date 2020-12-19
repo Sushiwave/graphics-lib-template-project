@@ -107,18 +107,18 @@ private:
 		const auto indexBuffer    = graphicsAPI->createIndexBuffer(indices);
 		const auto geometryBuffer = graphicsAPI->createGeometryBuffer(vertexBuffer, indexBuffer);
 		auto partName = "main";
-		const auto mainPart = cg::DrawableObject::Part(partName, material, geometryBuffer);
-		cg::DrawableObject::Parts parts;
-		parts.emplace(partName, mainPart);
+		const auto mainPart = cg::Geometry::Part(partName, material, geometryBuffer);
+		cg::Geometry::Parts parts(cg::Geometry::Parts::PartDict{ { partName, mainPart } });
 		
-		auto object = std::make_shared<cg::DrawableObject>(name, shape, parts);
+		auto object = std::make_shared<cg::DrawableObject>(name, cg::Geometry(shape, parts));
 		object->primitiveTopology = cg::PrimitiveTopology::TRIANGLELIST;
 		return object;
 	}
+
 	template <typename Vertex_>
 	static std::shared_ptr<cg::DrawableObject> createWavefrontOBJModel(const std::string& name, std::shared_ptr<cg::WavefrontOBJModel> model, cg::Material material = cg::Material())
 	{
-		cg::DrawableObject::Parts parts;
+		cg::Geometry::Parts::PartDict partDict;
 
 		auto offset = -model->minXYZ - model->size * 0.5;
 
@@ -139,9 +139,9 @@ private:
 				groupName = "part" + std::to_string(i + 1);
 			}
 
-			parts.emplace(groupName, cg::DrawableObject::Part(groupName, material, geometryBuffer));
+			partDict.emplace(groupName, cg::Geometry::Part(groupName, material, geometryBuffer));
 		}
-		auto object = std::make_shared<cg::DrawableObject>(name, std::make_shared<cg::AnyModel>(model->size), parts);
+		auto object = std::make_shared<cg::DrawableObject>(name, cg::Geometry(std::make_shared<cg::AnyModel>(model->size), cg::Geometry::Parts(partDict)));
 		object->primitiveTopology = cg::PrimitiveTopology::TRIANGLELIST;
 		return object;
 	}
