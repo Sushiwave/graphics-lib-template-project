@@ -162,6 +162,8 @@
     <ClCompile Include="FullscreenDepthTextureRenderPipeline.cpp" />
     <ClCompile Include="FullscreenTextureRenderPipeline.cpp" />
     <ClCompile Include="GeometryRenderPipeline.cpp" />
+    <ClCompile Include="ImGuiGeometryInspector.cpp" />
+    <ClCompile Include="ImGuiGeometryPartInspector.cpp" />
     <ClCompile Include="ImGuiGraphicsLibDefaultInspector.cpp" />
     <ClCompile Include="ImGuiCameraInspector.cpp" />
     <ClCompile Include="ConstantWithImGuiComponents.cpp" />
@@ -209,6 +211,8 @@
     <ClInclude Include="FullscreenDepthTextureOrthographicRenderPipeline.hpp" />
     <ClInclude Include="FullscreenDepthTextureRenderPipeline.hpp" />
     <ClInclude Include="GeometryRenderPipeline.hpp" />
+    <ClInclude Include="ImGuiGeometryInspector.hpp" />
+    <ClInclude Include="ImGuiGeometryPartInspector.hpp" />
     <ClInclude Include="ImGuiGraphicsLibDefaultInspector.hpp" />
     <ClInclude Include="ObjectControllingMethod.hpp" />
     <ClInclude Include="CameraController.hpp" />
@@ -246,7 +250,7 @@
     <ClInclude Include="ForwardZPrePassSampleRenderPipeline.hpp" />
     <ClInclude Include="DepthRenderPipeline.hpp" />
     <ClInclude Include="FullscreenQuad.hpp" />
-    <ClInclude Include="DrawableObjectCreator.hpp" />
+    <ClInclude Include="GeometryCreator.hpp" />
     <ClInclude Include="FullscreenQuadRenderPipeline.hpp" />
     <ClInclude Include="ForwardZPrePassRenderPipeline.hpp" />
     <ClInclude Include="FullscreenTextureRenderPipeline.hpp" />

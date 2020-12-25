@@ -103,9 +103,6 @@
     <ClInclude Include="FullscreenTextureRenderPipeline.hpp">
       <Filter>HeaderFiles\RenderPipeline\Base\FullscreenTextureRenderPipeline</Filter>
     </ClInclude>
-    <ClInclude Include="DrawableObjectCreator.hpp">
-      <Filter>HeaderFiles\DrawableObject\Creator</Filter>
-    </ClInclude>
     <ClInclude Include="ImGuiGraphicsLibDefaultInspector.hpp">
       <Filter>HeaderFiles\ImGui\Components\GraphicsLibDefaultInspector</Filter>
     </ClInclude>
@@ -153,6 +150,15 @@
     </ClInclude>
     <ClInclude Include="SampleGBuffer.hpp">
       <Filter>HeaderFiles\RenderPipeline\Sample\Deffered\GBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="GeometryCreator.hpp">
+      <Filter>HeaderFiles\DrawableObject\Creator</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuiGeometryInspector.hpp">
+      <Filter>HeaderFiles\ImGui\Components\SceneInspector</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuiGeometryPartInspector.hpp">
+      <Filter>HeaderFiles\ImGui\Components\SceneInspector</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -578,6 +584,8 @@
     <ClCompile Include="SampleGBuffer.cpp">
       <Filter>SourceFiles\RenderPipeline\Sample\Deffered\GBuffer</Filter>
     </ClCompile>
+    <ClCompile Include="ImGuiGeometryInspector.cpp" />
+    <ClCompile Include="ImGuiGeometryPartInspector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ShaderConstant.hlsl">

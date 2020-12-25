@@ -35,10 +35,10 @@ SampleGeometryRenderPipeline::SampleGeometryRenderPipeline(std::shared_ptr<cg::I
 					  (
 					      cg::TransformConstantBuffer::ElementBuffer::constructor<constant::TransformWVP_N>
 						  (
-						      [](constant::TransformWVP_N& data, const cg::Scene& s, const cg::Transform& t, const cg::Camera& c)
+						      [](constant::TransformWVP_N& data, const cg::Scene& s, const cg::Transform& t, const cg::Shape& sh, const cg::Camera& c)
 							  {
-							      cg::TransformConstantBufferHelper::storeWVP(&data.wvp, t, c);
-								  cg::TransformConstantBufferHelper::storeN(&data.n, t);
+							      cg::TransformConstantBufferHelper::storeWVP(&data.wvp, t, sh, c);
+								  cg::TransformConstantBufferHelper::storeN(&data.n, t, sh);
 							  }
 						  )
 					  )

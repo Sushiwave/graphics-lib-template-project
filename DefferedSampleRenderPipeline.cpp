@@ -46,7 +46,7 @@ DefferedSampleRenderPipeline::DefferedSampleRenderPipeline(const std::shared_ptr
 						  (
 							  cg::TransformConstantBuffer::ElementBuffer::constructor<constant::Transform_InvV_InvP_LVP>
 							  (
-								  [](constant::Transform_InvV_InvP_LVP& data, const cg::Scene& s, const cg::Transform& t, const cg::Camera& c)
+								  [](constant::Transform_InvV_InvP_LVP& data, const cg::Scene& s, const cg::Transform& t, const cg::Shape& sh, const cg::Camera& c)
 								  {
 									  cg::TransformConstantBufferHelper::storeInvV(&data.invV, c);
 									  cg::TransformConstantBufferHelper::storeInvP(&data.invP, c);

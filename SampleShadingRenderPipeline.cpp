@@ -57,11 +57,11 @@ SampleShadingRenderPipeline::SampleShadingRenderPipeline(const TargetRenderingGr
 					  (
 						  cg::TransformConstantBuffer::ElementBuffer::constructor<constant::TransformW_WVP_N_LWVP>
 						  (
-							  [](constant::TransformW_WVP_N_LWVP& data, const cg::Scene& s, const cg::Transform& t, const cg::Camera& c)
+							  [](constant::TransformW_WVP_N_LWVP& data, const cg::Scene& s, const cg::Transform& t, const cg::Shape& sh, const cg::Camera& c)
 							  {
-								  cg::TransformConstantBufferHelper::storeW(&data.w, t);
-								  cg::TransformConstantBufferHelper::storeWVP(&data.wvp, t, c);
-								  cg::TransformConstantBufferHelper::storeN(&data.n, t);
+								  cg::TransformConstantBufferHelper::storeW(&data.w, t, sh);
+								  cg::TransformConstantBufferHelper::storeWVP(&data.wvp, t, sh, c);
+								  cg::TransformConstantBufferHelper::storeN(&data.n, t, sh);
 
 								  const auto keyLight = std::dynamic_pointer_cast<SimpleDirectionalLight>(s.makeLightDict().at("Key"));
 								  cg::TransformConstantBufferHelper::storeWVP(&data.lwvp, t, keyLight->perspective);
