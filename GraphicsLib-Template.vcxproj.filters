@@ -584,8 +584,12 @@
     <ClCompile Include="SampleGBuffer.cpp">
       <Filter>SourceFiles\RenderPipeline\Sample\Deffered\GBuffer</Filter>
     </ClCompile>
-    <ClCompile Include="ImGuiGeometryInspector.cpp" />
-    <ClCompile Include="ImGuiGeometryPartInspector.cpp" />
+    <ClCompile Include="ImGuiGeometryInspector.cpp">
+      <Filter>SourceFiles\ImGui\Components\SceneInspector</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGuiGeometryPartInspector.cpp">
+      <Filter>SourceFiles\ImGui\Components\SceneInspector</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ShaderConstant.hlsl">

@@ -1,6 +1,5 @@
 #pragma once
-#include "ImGuiDrawableObjectMaterialInspector.hpp"
-#include <GraphicsLib.hpp>
+#include "ImGuiGeometryInspector.hpp"
 
 
 
@@ -11,7 +10,7 @@ namespace ImGui
 	class DrawableObjectInspector
 	{
 	private:
-		ImGui::DrawableObjectMaterialInspector m_materialInspector;
+		GeometryInspector m_geometryInspector;
 	public:
 		void draw(cg::DrawableObject& object);
 
