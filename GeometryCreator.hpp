@@ -9,11 +9,17 @@
 
 
 
-class DrawableObjectCreator
+
+class GeometryCreator
 {
 private:
 	DEFINE_SFINAE_HAS_MEMBER(normal);
 	DEFINE_SFINAE_HAS_MEMBER(uv);
+private:
+	static inline constexpr bool m_leftHanded
+#ifdef CONTEXT_D3D11
+		= true;
+#endif
 private:
 	template <typename Vertex_>
 	static void assignPositionInfoTo(std::vector<Vertex_>& vertices, const cg::GeometryCalculator::PositionList& vertexPositionList)
@@ -93,7 +99,7 @@ private:
 
 
 	template <typename Vertex_>
-	static std::shared_ptr<cg::DrawableObject> createObject(const std::string& name, std::vector<Vertex_>& vertices, const cg::GeometryCalculator::Indices& indices, std::shared_ptr<cg::Shape> shape, const cg::Material& material)
+	static cg::Geometry createGeometry(std::vector<Vertex_>& vertices, const cg::GeometryCalculator::Indices& indices, std::shared_ptr<cg::Shape> shape, const cg::Material& material)
 	{
 		auto graphicsAPI = cg::API::shared.graphics();
 
@@ -101,27 +107,29 @@ private:
 		const auto indexBuffer    = graphicsAPI->createIndexBuffer(indices);
 		const auto geometryBuffer = graphicsAPI->createGeometryBuffer(vertexBuffer, indexBuffer);
 		auto partName = "main";
-		const auto mainPart = cg::DrawableObject::Part(partName, material, geometryBuffer);
-		cg::DrawableObject::Parts parts;
-		parts.emplace(partName, mainPart);
+		const auto mainPart = cg::Geometry::Part(partName, material, geometryBuffer, cg::PrimitiveTopology::TRIANGLELIST);
+		cg::Geometry::Parts parts(cg::Geometry::Parts::PartDict{ { partName, mainPart } });
 		
-		auto object = std::make_shared<cg::DrawableObject>(name, shape, parts);
-		object->primitiveTopology = cg::PrimitiveTopology::TRIANGLELIST;
-		return object;
+		return cg::Geometry(shape, parts);
 	}
+
+
+
+
+
+
+
+
+
+
 public:
 	template <typename Vertex_>
-	static std::shared_ptr<cg::DrawableObject> createWavefronOBJModel(const std::string& name, const std::string& filename, cg::Material material = cg::Material())
+	static cg::Geometry createWavefrontOBJModelGeometry(std::shared_ptr<cg::WavefrontOBJModel> model, const cg::Material& material = cg::Material())
 	{
-		bool leftHanded = false;
-#ifdef CONTEXT_D3D11
-		leftHanded = true;
-#endif
-		const auto model = cg::WavefrontOBJModelLoader::load(filename, leftHanded);
-		cg::DrawableObject::Parts parts;
-		
-		auto offset = -model->minXYZ-model->size*0.5;
-		
+		cg::Geometry::Parts::PartDict partDict;
+
+		auto offset = -model->minXYZ - model->size * 0.5;
+
 		const auto groupCount = static_cast<unsigned int>(model->groupList.size());
 		for (unsigned int i = 0; i < groupCount; ++i)
 		{
@@ -129,44 +137,60 @@ public:
 
 			std::vector<Vertex_> vertices;
 			group.copyVertexDataTo(&vertices, offset);
-			const auto vertexBuffer   = cg::API::shared.graphics()->createVertexBuffer(&vertices[0], group.vertexCount, group.vertexByteSize);
-			const auto indexBuffer    = cg::API::shared.graphics()->createIndexBuffer(group.indices);
+			const auto vertexBuffer = cg::API::shared.graphics()->createVertexBuffer(&vertices[0], group.vertexCount, group.vertexByteSize);
+			const auto indexBuffer = cg::API::shared.graphics()->createIndexBuffer(group.indices);
 			const auto geometryBuffer = cg::API::shared.graphics()->createGeometryBuffer(vertexBuffer, indexBuffer);
 
 			std::string groupName = group.name;
 			if (groupName.empty())
 			{
-				groupName = "part"+std::to_string(i+1);
+				groupName = "part" + std::to_string(i + 1);
 			}
 
-			parts.emplace(groupName, cg::DrawableObject::Part(groupName, material, geometryBuffer));
+			partDict.emplace(groupName, cg::Geometry::Part(groupName, material, geometryBuffer, cg::PrimitiveTopology::TRIANGLELIST));
 		}
-		auto object = std::make_shared<cg::DrawableObject>(name, std::make_shared<cg::AnyModel>(model->size), parts);
-		object->primitiveTopology = cg::PrimitiveTopology::TRIANGLELIST;
-		return object;
+
+		return cg::Geometry(std::make_shared<cg::AnyModel>(model->size), cg::Geometry::Parts(partDict));
 	}
 	template <typename Vertex_>
-	static std::shared_ptr<cg::DrawableObject> createPlane(const std::string& name, float width, float height, cg::Material material = cg::Material())
+	static void createWavefronOBJModelGeometryAsync(const std::string& filename, cg::Material material, const std::function<void(const cg::Geometry& geometry)>& processingAfterCreating)
+	{
+		cg::WavefrontOBJModelLoader::loadAsync
+		(
+			filename, 
+			[=](std::shared_ptr<cg::WavefrontOBJModel> model)
+			{
+				processingAfterCreating(createWavefrontOBJModelGeometry<Vertex_>(model, material));
+			}, 
+			m_leftHanded
+		);
+	}
+
+
+
+
+	template <typename Vertex_>
+	static cg::Geometry createPlaneGeometry(float width, float height, cg::Material material = cg::Material())
 	{
 		std::vector<Vertex_> vertices;
 		vertices.resize(cg::GeometryCalculator::calcPlaneVertexCountTRIANGLELIST());
 
 		assignGeometryInfoTo(vertices, [=](){ return cg::GeometryCalculator::calcPlanePositionTRIANGLELIST(1.0, 1.0, 0.0); }, [](){ return cg::GeometryCalculator::calcPlaneNormalTRIANGLELIST(); }, [](){ return cg::GeometryCalculator::calcPlaneUVTRIANGLELIST(); });
 		
-		return createObject(name, vertices, cg::GeometryCalculator::calcPlaneIndexTRIANGLELIST(), std::make_shared<PlaneWithImGuiComponents>(width, height), material);
+		return createGeometry(vertices, cg::GeometryCalculator::calcPlaneIndexTRIANGLELIST(), std::make_shared<PlaneWithImGuiComponents>(width, height), material);
 	}
 	template <typename Vertex_>
-	static std::shared_ptr<cg::DrawableObject> createBox(const std::string& name, float width, float height, float depth, cg::Material material = cg::Material())
+	static cg::Geometry createBoxGeometry(float width, float height, float depth, cg::Material material = cg::Material())
 	{
 		std::vector<Vertex_> vertices;
 		vertices.resize(cg::GeometryCalculator::calcBoxVertexCountTRIANGLELIST());
 
 		assignGeometryInfoTo(vertices, [=]() { return cg::GeometryCalculator::calcBoxVertexPositionTRIANGLELIST(1.0, 1.0, 1.0); }, []() { return cg::GeometryCalculator::calcBoxNormalTRIANGLELIST(); }, []() { return cg::GeometryCalculator::calcBoxUVTRIANGLELIST(); });
 
-		return createObject(name, vertices, cg::GeometryCalculator::calcBoxIndexTRIANGLELIST(), std::make_shared<BoxWithImGuiComponents>(width, height, depth), material);
+		return createGeometry(vertices, cg::GeometryCalculator::calcBoxIndexTRIANGLELIST(), std::make_shared<BoxWithImGuiComponents>(width, height, depth), material);
 	}
 	template <typename Vertex_>
-	static std::shared_ptr<cg::DrawableObject> createSphere(const std::string& name, float radiusX, float radiusY, float radiusZ, unsigned int sliceCount, unsigned int stackCount, cg::Material& material)
+	static cg::Geometry createSphereGeometry(float radiusX, float radiusY, float radiusZ, unsigned int sliceCount, unsigned int stackCount, cg::Material& material)
 	{
 		std::vector<Vertex_> vertices;
 		vertices.resize(cg::GeometryCalculator::calcSphereVertexCountTRIANGLELIST(sliceCount, stackCount));
@@ -175,15 +199,11 @@ public:
 	
 		assignGeometryInfoTo(vertices, [&]() { positionListRef = cg::GeometryCalculator::calcSphereVertexPositionTRIANGLELIST(0.5, sliceCount, stackCount); return positionListRef; }, [&]() { return cg::GeometryCalculator::calcSphereNormal(positionListRef);  }, [=]() { return cg::GeometryCalculator::calcSphereUVTRIANGLELIST(sliceCount, stackCount); });
 
-		return createObject(name, vertices, cg::GeometryCalculator::calcSphereIndexTRIANGLELIST(sliceCount, stackCount), std::make_shared<SphereWithImGuiComponents>(radiusX, radiusY, radiusZ), material);
+		return createGeometry(vertices, cg::GeometryCalculator::calcSphereIndexTRIANGLELIST(sliceCount, stackCount), std::make_shared<SphereWithImGuiComponents>(radiusX, radiusY, radiusZ), material);
 	}
 	template <typename Vertex_>
-	static std::shared_ptr<cg::DrawableObject> createSphere(const std::string& name, float radius, unsigned int sliceCount, unsigned int stackCount, cg::Material& material)
+	static cg::Geometry createSphereGeometry(float radius, unsigned int sliceCount, unsigned int stackCount, cg::Material& material)
 	{
-		return createSphere<Vertex_>(name, radius, radius, radius, sliceCount, stackCount, material);
+		return createSphereGeometry<Vertex_>(radius, radius, radius, sliceCount, stackCount, material);
 	}
 };
-
-
-
-

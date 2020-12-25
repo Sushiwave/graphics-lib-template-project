@@ -18,7 +18,7 @@ namespace ImGui
 			const auto scale = target.calcScaleLocal();
 			const auto distanceFromObject = max(max(scale.x, scale.y), scale.z)*1.5f;
 
-			auto& cameraTransform = camera.getTransformRef();
+			auto& cameraTransform = *camera.transform;
 			cameraTransform.changeUpWorld(0.0, 1.0, 0.0);
 			cameraTransform.changeCenterWorld(positionWorld);
 			cameraTransform.changeFocusPositionWorld(positionWorld);

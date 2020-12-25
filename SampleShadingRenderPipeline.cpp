@@ -57,13 +57,13 @@ SampleShadingRenderPipeline::SampleShadingRenderPipeline(const TargetRenderingGr
 					  (
 						  cg::TransformConstantBuffer::ElementBuffer::constructor<constant::TransformW_WVP_N_LWVP>
 						  (
-							  [](constant::TransformW_WVP_N_LWVP& data, const cg::Scene& s, const cg::Transform& t, const cg::Camera& c)
+							  [](constant::TransformW_WVP_N_LWVP& data, const cg::Scene& s, const cg::Transform& t, const cg::Shape& sh, const cg::Camera& c)
 							  {
-								  cg::TransformConstantBufferHelper::storeW(&data.w, t);
-								  cg::TransformConstantBufferHelper::storeWVP(&data.wvp, t, c);
-								  cg::TransformConstantBufferHelper::storeN(&data.n, t);
+								  cg::TransformConstantBufferHelper::storeW(&data.w, t, sh);
+								  cg::TransformConstantBufferHelper::storeWVP(&data.wvp, t, sh, c);
+								  cg::TransformConstantBufferHelper::storeN(&data.n, t, sh);
 
-								  const auto keyLight = std::dynamic_pointer_cast<SimpleDirectionalLight>(s.getLightDict().at("Key"));
+								  const auto keyLight = std::dynamic_pointer_cast<SimpleDirectionalLight>(s.makeLightDict().at("Key"));
 								  cg::TransformConstantBufferHelper::storeWVP(&data.lwvp, t, keyLight->perspective);
 							  }
 						  )
@@ -88,14 +88,14 @@ SampleShadingRenderPipeline::SampleShadingRenderPipeline(const TargetRenderingGr
 								  auto pointLightSrc = std::dynamic_pointer_cast<SimplePointLight>(scene.getLights(SimplePointLight::type).at("Back"));
 								  auto& pointLightDest = data.pointLights[0];
 								  pointLightDest = pointLightSrc->getConstant().get<constant::SimplePointLight>();
-								  cpp::assignVector3DToArray4(&pointLightDest.position, pointLightSrc->getTransformRef().calcPositionWorld());
+								  cpp::assignVector3DToArray4(&pointLightDest.position, pointLightSrc->transform->calcPositionWorld());
 												
 								  auto directionalLightSrc = std::dynamic_pointer_cast<SimpleDirectionalLight>(scene.getLights(SimpleDirectionalLight::type).at("Key"));
 								  auto& directionalLightDest = data.directionalLight;
 								  directionalLightDest = directionalLightSrc->getConstant().get<constant::SimpleDirectionalLight>();
-								  cpp::assignVector3DToArray4(&directionalLightDest.direction, directionalLightSrc->perspective.getTransformRef().calcForwardWorld());
+								  cpp::assignVector3DToArray4(&directionalLightDest.direction, directionalLightSrc->perspective.transform->calcForwardWorld());
 										
-								  cpp::assignVector3DToArray4(&data.cameraPosition, scene.camera.getTransformRef().calcPositionLocal());
+								  cpp::assignVector3DToArray4(&data.cameraPosition, scene.camera.transform->calcPositionLocal());
 							  }
 						  )
 					  )

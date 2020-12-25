@@ -47,9 +47,9 @@ public:
 						  (\
 							  cg::TransformConstantBuffer::ElementBuffer::constructor<constant::TransformWVP>\
 							  (\
-								  [](constant::TransformWVP& data, const cg::Scene& s, const cg::Transform& t, const cg::Camera& c)\
+								  [](constant::TransformWVP& data, const cg::Scene& s, const cg::Transform& t, const cg::Shape& sh, const cg::Camera& c)\
 								  {\
-									  cg::TransformConstantBufferHelper::storeWVP(&data.wvp, t, c);\
+									  cg::TransformConstantBufferHelper::storeWVP(&data.wvp, t, sh, c);\
 								  }\
 							  )\
 						  )\

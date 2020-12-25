@@ -22,7 +22,7 @@ namespace ImGui
 				style.Colors->w = 0.5;
 			}
 
-			ImGui::TransformInspector(camera.getTransformRef());
+			ImGui::TransformInspector(*camera.transform);
 
 			if (isCameraControlEnabled)
 			{

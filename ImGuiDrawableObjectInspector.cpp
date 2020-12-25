@@ -10,30 +10,22 @@ namespace ImGui
 {
 	void DrawableObjectInspector::draw(cg::DrawableObject& object)
 	{
-		auto components = object.getShapeP<IImGuiComponentsHolder>();
-		if (components)
-		{
-			if (ImGui::TreeNode("Shape"))
-			{
-				components->drawImGuiComponents();
-
-				ImGui::TreePop();
-			}
-		}
 		if (ImGui::TreeNode("Transform"))
 		{
-			ImGui::TransformInspector(object.getTransformRef());
+			ImGui::TransformInspector(*object.transform);
 			ImGui::TreePop();
 		}
-		if (ImGui::TreeNode("Material"))
+		if (object.geometry.empty() == false)
 		{
-			m_materialInspector.draw(object);
-
-			ImGui::TreePop();
+			if (ImGui::TreeNode("Geometry"))
+			{
+				m_geometryInspector.draw(object.geometry);
+				ImGui::TreePop();
+			}
 		}
 	}
 	void DrawableObjectInspector::reset()
 	{
-		m_materialInspector.reset();
+		m_geometryInspector.reset();
 	}
 }

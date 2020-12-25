@@ -46,12 +46,12 @@ DefferedSampleRenderPipeline::DefferedSampleRenderPipeline(const std::shared_ptr
 						  (
 							  cg::TransformConstantBuffer::ElementBuffer::constructor<constant::Transform_InvV_InvP_LVP>
 							  (
-								  [](constant::Transform_InvV_InvP_LVP& data, const cg::Scene& s, const cg::Transform& t, const cg::Camera& c)
+								  [](constant::Transform_InvV_InvP_LVP& data, const cg::Scene& s, const cg::Transform& t, const cg::Shape& sh, const cg::Camera& c)
 								  {
 									  cg::TransformConstantBufferHelper::storeInvV(&data.invV, c);
 									  cg::TransformConstantBufferHelper::storeInvP(&data.invP, c);
 									
-									  const auto keyLight = std::dynamic_pointer_cast<SimpleDirectionalLight>(s.getLightDict().at("Key"));
+									  const auto keyLight = std::dynamic_pointer_cast<SimpleDirectionalLight>(s.makeLightDict().at("Key"));
 									  cg::TransformConstantBufferHelper::storeVP(&data.lvp, keyLight->perspective);
 								  }
 							  )
@@ -76,14 +76,14 @@ DefferedSampleRenderPipeline::DefferedSampleRenderPipeline(const std::shared_ptr
 									  auto pointLightSrc = std::dynamic_pointer_cast<SimplePointLight>(scene.getLights(SimplePointLight::type).at("Back"));
 									  auto& pointLightDest = data.pointLights[0];
 									  pointLightDest = pointLightSrc->getConstant().get<constant::SimplePointLight>();
-									  cpp::assignVector3DToArray4(&pointLightDest.position, pointLightSrc->getTransformRef().calcPositionWorld());
+									  cpp::assignVector3DToArray4(&pointLightDest.position, pointLightSrc->transform->calcPositionWorld());
 
 									  auto directionalLightSrc = std::dynamic_pointer_cast<SimpleDirectionalLight>(scene.getLights(SimpleDirectionalLight::type).at("Key"));
 									  auto& directionalLightDest = data.directionalLight;
 									  directionalLightDest = directionalLightSrc->getConstant().get<constant::SimpleDirectionalLight>();
-									  cpp::assignVector3DToArray4(&directionalLightDest.direction, directionalLightSrc->perspective.getTransformRef().calcForwardWorld());
+									  cpp::assignVector3DToArray4(&directionalLightDest.direction, directionalLightSrc->perspective.transform->calcForwardWorld());
 
-									  cpp::assignVector3DToArray4(&data.cameraPosition, scene.camera.getTransformRef().calcPositionLocal());
+									  cpp::assignVector3DToArray4(&data.cameraPosition, scene.camera.transform->calcPositionLocal());
 								  }
 							  )
 						  )
