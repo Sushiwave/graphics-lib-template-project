@@ -27,12 +27,15 @@ namespace ImGui
 			int selectedPartIndex = -1;
 			m_searchBar.draw("Part", "Name...", partNameList, 8, selectedPartIndex);
 
-			if (selectedPartIndex == -1) { return; }
+			if (selectedPartIndex != -1)
+			{
+				const auto partName = partNameList[selectedPartIndex];
+				auto part = geometry.parts.get(partName);
 
-			const auto partName = partNameList[selectedPartIndex];
-			auto part = geometry.parts.get(partName);
+				m_partInspector.draw(part);
+			}
 
-			m_partInspector.draw(part);
+			ImGui::TreePop();
 		}
 	}
 
