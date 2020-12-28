@@ -12,7 +12,7 @@ FullscreenQuadRenderPipeline::FullscreenQuadRenderPipeline(const std::string& na
 		  renderTarget, 
 		  nullptr,
 		  nullptr,
-		  cg::API::shared.graphics()->createRasterizer(),
+		  cg::API::shared.graphics()->createRasterizerState(),
 		  nullptr,
 		  {
 			  { cg::ShaderStage::vs, std::dynamic_pointer_cast<cg::IVertexShader>(cg::ShaderPool::shared.createFromFileAndAdd(cg::ShaderStage::vs, "FullscreenQuad.vsh", "FullscreenQuad.vsh", "vs_main", "vs_5_0")) },
