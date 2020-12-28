@@ -5,11 +5,11 @@
 
 
 DepthRenderPipeline::DepthRenderPipeline(const std::string& name, const TargetRenderingGroupNameList& targetRenderingGroupNameList, std::shared_ptr<cg::IDepthStencilBuffer> depthStencilBuffer, std::shared_ptr<cg::TransformConstantBuffer> transformConstantBuffer, const cg::RasterizationBasedRenderPipeline::ShaderDict& shaderDict, AdditionalSetCallScene additionalSetCall)
-	: DepthRenderPipeline(name, targetRenderingGroupNameList, depthStencilBuffer, cg::API::shared.graphics()->createDepthStencilTester(cg::ComparisonFunction::less, cg::ComparisonFunction::always, true, false, true), transformConstantBuffer, shaderDict, additionalSetCall)
+	: DepthRenderPipeline(name, targetRenderingGroupNameList, depthStencilBuffer, cg::API::shared.graphics()->createDepthStencilTesterState(cg::ComparisonFunction::less, cg::ComparisonFunction::always, true, false, true), transformConstantBuffer, shaderDict, additionalSetCall)
 {
 }
 
-DepthRenderPipeline::DepthRenderPipeline(const std::string& name, const TargetRenderingGroupNameList& targetRenderingGroupNameList, std::shared_ptr<cg::IDepthStencilBuffer> depthStencilBuffer, std::shared_ptr<cg::IDepthStencilTester> depthTesterLessFunction, std::shared_ptr<cg::TransformConstantBuffer> transformConstantBuffer, const cg::RasterizationBasedRenderPipeline::ShaderDict& shaderDict, AdditionalSetCallScene additionalSetCall)
+DepthRenderPipeline::DepthRenderPipeline(const std::string& name, const TargetRenderingGroupNameList& targetRenderingGroupNameList, std::shared_ptr<cg::IDepthStencilBuffer> depthStencilBuffer, std::shared_ptr<cg::IDepthStencilTesterState> depthTesterLessFunction, std::shared_ptr<cg::TransformConstantBuffer> transformConstantBuffer, const cg::RasterizationBasedRenderPipeline::ShaderDict& shaderDict, AdditionalSetCallScene additionalSetCall)
 	: RenderPipelineSRTWithImGuiComponents(name, targetRenderingGroupNameList, cg::MainRenderTarget::shared.get(), depthStencilBuffer, depthTesterLessFunction, nullptr, nullptr, shaderDict, nullptr, transformConstantBuffer, nullptr),
 	  m_additionalSetCall(additionalSetCall)
 {

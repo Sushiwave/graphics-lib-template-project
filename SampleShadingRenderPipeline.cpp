@@ -7,12 +7,12 @@
 
 
 
-SampleShadingRenderPipeline::SampleShadingRenderPipeline(const TargetRenderingGroupNameList& targetRenderingGroupNameList, std::shared_ptr<cg::IDepthStencilBuffer> depthStencilBuffer, std::shared_ptr<cg::IDepthStencilTester> depthStencilTester, std::shared_ptr<cg::IDepthStencilBuffer> shadowMap, std::shared_ptr<cg::ITextureSampler> shadowMapSampler)
+SampleShadingRenderPipeline::SampleShadingRenderPipeline(const TargetRenderingGroupNameList& targetRenderingGroupNameList, std::shared_ptr<cg::IDepthStencilBuffer> depthStencilBuffer, std::shared_ptr<cg::IDepthStencilTesterState> depthStencilTester, std::shared_ptr<cg::IDepthStencilBuffer> shadowMap, std::shared_ptr<cg::ITextureSampler> shadowMapSampler)
 	: SampleShadingRenderPipeline(targetRenderingGroupNameList, cg::MainRenderTarget::shared.get(), depthStencilBuffer, depthStencilTester, shadowMap, shadowMapSampler)
 {
 }
 
-SampleShadingRenderPipeline::SampleShadingRenderPipeline(const TargetRenderingGroupNameList& targetRenderingGroupNameList, std::shared_ptr<cg::IRenderTarget> renderTarget, std::shared_ptr<cg::IDepthStencilBuffer> depthStencilBuffer, std::shared_ptr<cg::IDepthStencilTester> depthStencilTester, std::shared_ptr<cg::IDepthStencilBuffer> shadowMap, std::shared_ptr<cg::ITextureSampler> shadowMapSampler)
+SampleShadingRenderPipeline::SampleShadingRenderPipeline(const TargetRenderingGroupNameList& targetRenderingGroupNameList, std::shared_ptr<cg::IRenderTarget> renderTarget, std::shared_ptr<cg::IDepthStencilBuffer> depthStencilBuffer, std::shared_ptr<cg::IDepthStencilTesterState> depthStencilTester, std::shared_ptr<cg::IDepthStencilBuffer> shadowMap, std::shared_ptr<cg::ITextureSampler> shadowMapSampler)
 	: RenderPipelineSRTWithImGuiComponents
       (
 		  "Sample Shading Render Pipeline",
@@ -20,8 +20,8 @@ SampleShadingRenderPipeline::SampleShadingRenderPipeline(const TargetRenderingGr
 		  renderTarget, 
 		  depthStencilBuffer,
 		  depthStencilTester,
-		  cg::API::shared.graphics()->createRasterizer(cg::CullMode::back, false, false, false, false, false, false),
-          cg::API::shared.graphics()->createAlphaBlender(cg::AlphaBlenderDescriptor()),
+		  cg::API::shared.graphics()->createRasterizerState(cg::CullMode::back, false, false, false, false, false, false),
+          cg::API::shared.graphics()->createAlphaBlendState(cg::AlphaBlendDescriptor()),
 		  {
 			  {
 				  cg::ShaderStage::vs,

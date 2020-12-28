@@ -12,7 +12,7 @@ const cg::RasterizationBasedRenderPipeline::TargetRenderingGroupNameList targetR
 
 
 
-ForwardSampleRenderPipeline::ForwardSampleRenderPipeline(std::shared_ptr<cg::IRenderTarget> renderTarget, std::shared_ptr<cg::IDepthStencilBuffer> depthStencilBuffer, std::shared_ptr<cg::IDepthStencilTester> depthStencilTester, std::shared_ptr<cg::IDepthStencilBuffer> shadowMap, std::shared_ptr<cg::ITextureSampler> shadowMapSampler, bool shouldRefreshRenderTarget, bool shouldRefreshDepthStencilBuffer)
+ForwardSampleRenderPipeline::ForwardSampleRenderPipeline(std::shared_ptr<cg::IRenderTarget> renderTarget, std::shared_ptr<cg::IDepthStencilBuffer> depthStencilBuffer, std::shared_ptr<cg::IDepthStencilTesterState> depthStencilTester, std::shared_ptr<cg::IDepthStencilBuffer> shadowMap, std::shared_ptr<cg::ITextureSampler> shadowMapSampler, bool shouldRefreshRenderTarget, bool shouldRefreshDepthStencilBuffer)
 	: ForwardRenderPipeline("Test Render Pipeline", renderTarget, depthStencilBuffer),
 	  m_shadowMapRenderingPass(DepthPass("Shadow Map Render Pipeline", { std::make_shared<Position3Normal3DepthRenderPipeline>(targetRenderingGroupNameList, shadowMap) }, shadowMap, true)),
 	  m_shadingRenderPipeline(targetRenderingGroupNameList, renderTarget, depthStencilBuffer, depthStencilTester, shadowMap, shadowMapSampler),
@@ -22,11 +22,11 @@ ForwardSampleRenderPipeline::ForwardSampleRenderPipeline(std::shared_ptr<cg::IRe
 }
 
 ForwardSampleRenderPipeline::ForwardSampleRenderPipeline(std::shared_ptr<cg::IRenderTarget> renderTarget)
-	: ForwardSampleRenderPipeline(renderTarget, cg::API::shared.graphics()->createDepthStencilTester(cg::ComparisonFunction::less, cg::ComparisonFunction::always, true, false, true))
+	: ForwardSampleRenderPipeline(renderTarget, cg::API::shared.graphics()->createDepthStencilTesterState(cg::ComparisonFunction::less, cg::ComparisonFunction::always, true, false, true))
 {
 }
 
-ForwardSampleRenderPipeline::ForwardSampleRenderPipeline(std::shared_ptr<cg::IRenderTarget> renderTarget, std::shared_ptr<cg::IDepthStencilTester> depthStencilTester, bool shouldRefreshRenderTarget, bool shouldRefreshDepthStencilBuffer)
+ForwardSampleRenderPipeline::ForwardSampleRenderPipeline(std::shared_ptr<cg::IRenderTarget> renderTarget, std::shared_ptr<cg::IDepthStencilTesterState> depthStencilTester, bool shouldRefreshRenderTarget, bool shouldRefreshDepthStencilBuffer)
 	: ForwardSampleRenderPipeline
 	  (
 		  renderTarget,

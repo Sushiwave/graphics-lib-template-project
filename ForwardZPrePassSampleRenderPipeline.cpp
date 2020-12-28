@@ -14,6 +14,6 @@ ForwardZPrePassSampleRenderPipeline::ForwardZPrePassSampleRenderPipeline(std::sh
 }
 
 ForwardZPrePassSampleRenderPipeline::ForwardZPrePassSampleRenderPipeline(std::shared_ptr<cg::IRenderTarget> renderTarget)
-	: ForwardZPrePassSampleRenderPipeline(std::make_shared<ForwardSampleRenderPipeline>(renderTarget, cg::API::shared.graphics()->createDepthStencilTester(cg::ComparisonFunction::equal, cg::ComparisonFunction::always, true, false, false), true, false))
+	: ForwardZPrePassSampleRenderPipeline(std::make_shared<ForwardSampleRenderPipeline>(renderTarget, cg::API::shared.graphics()->createDepthStencilTesterState(cg::ComparisonFunction::equal, cg::ComparisonFunction::always, true, false, false), true, false))
 {
 }
