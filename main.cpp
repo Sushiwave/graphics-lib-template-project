@@ -95,9 +95,9 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 	sphere->transform->changePosition(0.75f, 0.75f * 0.5f, 0.0f);
 	box->transform->changePosition(-0.75f, 0.75f * 0.5f, 0.0f);
 
-	plane->moveTo(renderingGroupName);
-	sphere->moveTo(renderingGroupName);
-	box->moveTo(renderingGroupName);
+	plane->moveToAnotherRenderingGroup(renderingGroupName);
+	sphere->moveToAnotherRenderingGroup(renderingGroupName);
+	box->moveToAnotherRenderingGroup(renderingGroupName);
 
 
 

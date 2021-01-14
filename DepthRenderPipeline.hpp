@@ -56,7 +56,7 @@ public:
 					  }\
 				  }\
               ),\
-              { { cg::ShaderStage::ps, std::dynamic_pointer_cast<cg::IVertexShader>(cg::ShaderPool::shared.createFromFileAndAdd(cg::ShaderStage::vs, "DepthPass.vsh/vs_main_"#NAME"", "DepthPass.vsh", "vs_main_"#NAME"", "vs_4_0")) } })\
+              { { cg::ShaderStage::ps, std::dynamic_pointer_cast<cg::IVertexShader>(cg::ShaderPool::shared.createShaderFromFileAndPool(cg::ShaderStage::vs, "DepthPass.vsh/vs_main_"#NAME"", "DepthPass.vsh", "vs_main_"#NAME"", "vs_4_0")) } })\
 		{\
 		}\
 	}

@@ -10,7 +10,7 @@ FullscreenTextureRenderPipeline::FullscreenTextureRenderPipeline(const std::stri
 }
 
 FullscreenTextureRenderPipeline::FullscreenTextureRenderPipeline(const std::string& name, std::shared_ptr<cg::ITexture2D> target, std::shared_ptr<cg::ITextureSampler> targetSampler, std::shared_ptr<cg::IRenderTarget> renderTarget, const FullscreenQuad& quad)
-	: FullscreenTextureRenderPipeline(name, target, targetSampler, renderTarget, quad, std::dynamic_pointer_cast<cg::IPixelShader>(cg::ShaderPool::shared.createFromFileAndAdd(cg::ShaderStage::ps, "FullscreenTexture.psh", "FullscreenTexture.psh", "ps_main", "ps_4_0")), [](){})
+	: FullscreenTextureRenderPipeline(name, target, targetSampler, renderTarget, quad, std::dynamic_pointer_cast<cg::IPixelShader>(cg::ShaderPool::shared.createShaderFromFileAndPool(cg::ShaderStage::ps, "FullscreenTexture.psh", "FullscreenTexture.psh", "ps_main", "ps_4_0")), [](){})
 {
 }
 

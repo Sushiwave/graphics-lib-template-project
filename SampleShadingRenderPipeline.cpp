@@ -25,11 +25,11 @@ SampleShadingRenderPipeline::SampleShadingRenderPipeline(const TargetRenderingGr
 		  {
 			  {
 				  cg::ShaderStage::vs,
-				  std::dynamic_pointer_cast<cg::IVertexShader>(cg::ShaderPool::shared.createFromFileAndAdd(cg::ShaderStage::vs, "SamplePosition3Normal3.vsh", "SamplePosition3Normal3.vsh", "vs_main", "vs_4_0"))
+				  std::dynamic_pointer_cast<cg::IVertexShader>(cg::ShaderPool::shared.createShaderFromFileAndPool(cg::ShaderStage::vs, "SamplePosition3Normal3.vsh", "SamplePosition3Normal3.vsh", "vs_main", "vs_4_0"))
 			  },
 			  {
 				  cg::ShaderStage::ps,
-				  std::dynamic_pointer_cast<cg::IPixelShader>(cg::ShaderPool::shared.createFromFileAndAdd(cg::ShaderStage::ps, "SampleShading.psh", "SampleShading.psh", "ps_main", "ps_4_0"))
+				  std::dynamic_pointer_cast<cg::IPixelShader>(cg::ShaderPool::shared.createShaderFromFileAndPool(cg::ShaderStage::ps, "SampleShading.psh", "SampleShading.psh", "ps_main", "ps_4_0"))
 			  }
 		  },
 		  std::make_shared<cg::MaterialConstantBuffer>

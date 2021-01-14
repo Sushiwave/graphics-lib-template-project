@@ -49,11 +49,11 @@ SampleGeometryRenderPipeline::SampleGeometryRenderPipeline(std::shared_ptr<cg::I
 		  {
 		      {
 			      cg::ShaderStage::vs,
-				  cg::ShaderPool::shared.createFromFileAndAdd(cg::ShaderStage::vs, "SampleGeometryPass.vsh", "SampleGeometryPass.vsh", "vs_main", "vs_4_0")
+				  cg::ShaderPool::shared.createShaderFromFileAndPool(cg::ShaderStage::vs, "SampleGeometryPass.vsh", "SampleGeometryPass.vsh", "vs_main", "vs_4_0")
 			  },
 			  {
 				  cg::ShaderStage::ps,
-				  cg::ShaderPool::shared.createFromFileAndAdd(cg::ShaderStage::ps, "SampleGeometryPass.psh", "SampleGeometryPass.psh", "ps_main", "ps_4_0")
+				  cg::ShaderPool::shared.createShaderFromFileAndPool(cg::ShaderStage::ps, "SampleGeometryPass.psh", "SampleGeometryPass.psh", "ps_main", "ps_4_0")
 			  }
 		  }
 	  )

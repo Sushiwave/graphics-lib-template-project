@@ -15,7 +15,7 @@ FullscreenDepthTexturePerspectiveRenderPipeline::FullscreenDepthTexturePerspecti
 		                              targetSampler,
 									  renderTarget,
 									  quad,
-  									  std::dynamic_pointer_cast<cg::IPixelShader>(cg::ShaderPool::shared.createFromFileAndAdd(cg::ShaderStage::ps, "FullscreenDepthTexturePerspective.psh", "FullscreenDepthTexturePerspective.psh", "ps_main", "ps_4_0")),
+  									  std::dynamic_pointer_cast<cg::IPixelShader>(cg::ShaderPool::shared.createShaderFromFileAndPool(cg::ShaderStage::ps, "FullscreenDepthTexturePerspective.psh", "FullscreenDepthTexturePerspective.psh", "ps_main", "ps_4_0")),
 									  [&]() { m_constantBuffer->set(cg::ShaderStage::ps, cg::ShaderPool::shared.get(cg::ShaderStage::ps, "FullscreenDepthTexturePerspective.psh")->getResourceLocationDict().at(cg::ShaderResourceType::ConstantBuffer).at("DepthLinearizer")); })
 {
 	m_constantBuffer = cg::API::shared.graphics()->createDynamicConstantBuffer(sizeof(constant::DepthLinearizer));
