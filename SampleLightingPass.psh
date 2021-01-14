@@ -114,5 +114,6 @@ float4 ps_main(PSInput input) : SV_TARGET
 	{
 		outColor *= 0.5;
 	}
-	return float4(outColor , 1.0);
+
+	return float4(pow(outColor, 1.0/2.2) , 1.0);
 }
