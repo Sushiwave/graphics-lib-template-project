@@ -1,4 +1,4 @@
-#include "DrawableObjectCreator.hpp"
+#include "GeometryCreator.hpp"
 
 #include "VertexShaderInput.hpp"
 #include "ShaderConstant.hpp"
@@ -59,7 +59,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 	}
 	catch (cpp::com_runtime_error e)
 	{
-		Log(e.message());
+		Log(e.message().c_str());
 	}
 
 	// Prepare material
@@ -83,13 +83,17 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 
 
 	// Prepare objects
-	auto plane = DrawableObjectCreator::createBox<vsinput::Position3Normal3>("Plane", 5.0f, 0.1f, 5.0f, planeMaterial);
-	auto sphere = DrawableObjectCreator::createSphere<vsinput::Position3Normal3>("Sphere", 0.75f * 0.5f, 20, 20, sphereMaterial);
-	auto box = DrawableObjectCreator::createBox<vsinput::Position3Normal3>("Box", 0.75f, 0.75f, 0.75f, boxMaterial);
+	auto plane = std::make_shared<cg::DrawableObject>("Plane");
+	auto sphere = std::make_shared<cg::DrawableObject>("Sphere");
+	auto box = std::make_shared<cg::DrawableObject>("Box");
 
-	plane->getTransformRef().changePosition(0.0f, -0.05f, 0.0f);
-	sphere->getTransformRef().changePosition(0.75f, 0.75f * 0.5f, 0.0f);
-	box->getTransformRef().changePosition(-0.75f, 0.75f * 0.5f, 0.0f);
+	plane->geometry  = GeometryCreator::createBoxGeometry<vsinput::Position3Normal3>(5.0f, 0.1f, 5.0f, planeMaterial);
+	sphere->geometry = GeometryCreator::createSphereGeometry<vsinput::Position3Normal3>(0.75f * 0.5f, 20, 20, sphereMaterial);
+	box->geometry    = GeometryCreator::createBoxGeometry<vsinput::Position3Normal3>(0.75f, 0.75f, 0.75f, boxMaterial);
+
+	plane->transform->changePosition(0.0f, -0.05f, 0.0f);
+	sphere->transform->changePosition(0.75f, 0.75f * 0.5f, 0.0f);
+	box->transform->changePosition(-0.75f, 0.75f * 0.5f, 0.0f);
 
 	plane->moveTo(renderingGroupName);
 	sphere->moveTo(renderingGroupName);
@@ -100,17 +104,17 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 	// Setup Scene
 	auto scene = cg::Scene("World");
 
-	auto mainGroup = std::make_shared<cg::DrawableObjectGroup>("MainGroup");
+	auto mainGroup = std::make_shared<cg::Scene::Group>("MainGroup");
 	mainGroup->add(sphere);
 	mainGroup->add(box);
 	mainGroup->add(plane);
 
-	scene.addObjectGroup(mainGroup);
+	scene.addGroup(mainGroup);
 
 
 
 	// Setup Camera
-	auto& cameraTransform = scene.camera.getTransformRef();
+	auto& cameraTransform = *scene.camera.transform;
 	cameraTransform.changePosition(0.0f, 1.0f, -2.0f);
 	cameraTransform.changeCoordinateSystem(cg::CoordinateSystem::rectangular);
 	cameraTransform.changeRotationMethod(cg::RotationMethod::lookAt);
@@ -127,7 +131,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 
 	// Setup key light
 	auto keyLight = std::make_shared<SimpleDirectionalLight>("Key");
-	auto& keyLightCameraTransform = keyLight->perspective.getTransformRef();
+	auto& keyLightCameraTransform = *keyLight->perspective.transform;
 	auto& keyLightCameraProjection = keyLight->perspective.projection;
 
 	const auto keyLightDirection = cpp::Vector3D<float>(0.0f, -0.5f, 1.0f);
@@ -151,7 +155,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
 
 	// Setup back light
 	auto pointLight = std::make_shared<SimplePointLight>("Back");
-	auto& pointLightTransform = pointLight->getTransformRef();
+	auto& pointLightTransform = *pointLight->transform;
 
 	pointLight->accessToColorParam().changeColor(1.0f, 1.0f, 1.0f);
 
